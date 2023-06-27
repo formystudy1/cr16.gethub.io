@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Десткий Сад №16| Журнал</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<!--блок с приложением-->
+<div id="app">
+    <div class="container">
+        <div class="img_logo" >
+            <img src="css/logo.jpg">
+        </div>
+
+<!--блок регистрация/авторизация-->
+    <div class="reg_avt" :hidden="red_avt_h">
+        <div class="avtoriz">
+
+            <div class="for_btn"><button class="btn1" @click="openDialogAvto">Авторизация</button></div>
+
+            <dialog class="avt" :open="openAvt" >
+                <div class="avt_dia">
+                    <form onsubmit="return false">
+                        <p>Введите логин:</p>
+                        <div><input type="text" class="input" placeholder="mayavas71" v-model="login"></div>
+                        <p>Введите пароль:</p>
+                        <div><input type="text" class="input" placeholder="****" v-model="password"></div>
+                        <button class="btn-form" @click="avto" >Авторизация</button>
+                        <button class="btn-close" @click="close">Закрыть окно</button>
+                    </form>
+                </div>
+
+            </dialog>
+        </div>
+
+
+        <div class="refis">
+
+            <div class="for_btn"><button class="btn1" @click="openDialogreg">Регистрация</button></div>
+
+            <dialog class="rig" :open="openReg" >
+                <div class="rig_dia">
+                    <form onsubmit="return false">
+                    <div><p>Введите фамилию:</p>
+                        <div><input type="text" class="input" placeholder="Иванов" v-model="fname" ></div>
+                    </div>
+                    <div><p>Введите имя:</p>
+                        <div><input type="text" class="input" placeholder="Иван" v-model="nname" ></div>
+                    </div>
+                    <div><p>Введите отчество:</p>
+                       <div><input type="text" class="input" placeholder="Иванович" v-model="oname" ></div>
+                    </div>
+                    <div><p>Введите телефон:</p>
+                        <div><input type="text" class="input" placeholder="8(ххх)ххх-хх-хх" v-model="phone" ></div>
+                    </div>
+                    <div><p>Введите логин:</p>
+                        <div><input type="text" class="input" placeholder="ivan123" v-model="login" ></div>
+                    </div>
+                    <div><p>Введите пароль:</p>
+                        <div><input type="text" class="input" placeholder="*****" v-model="password"></div>
+                    </div>
+                    <p>Выберите пол:</p>
+                    <div>
+                        <input type="radio" name="gen" id="man" value="мужской" v-model="pol" class="radio">
+                        <label for="man">мужской</label>
+                        <input type="radio" name="gen" id="w" value="женский" v-model="pol" class="radio">
+                        <label for="w">женский</label>
+                    </div>
+                    <p class="top-strong" >Выберите должность:</p>
+                    <div>
+                       <div>
+                           <input type="radio" id="zav" value="zav" v-model="statuss" class="radio">
+                           <label for="zav">Заведующий</label>
+                           <input type="radio" id="star_vos" value="star_vos" v-model="statuss" class="radio">
+                           <label for="star_vos">Старший воспитатель</label>
+                       </div>
+                        <div>
+                            <input type="radio" id="logoped" value="logoped" v-model="statuss" class="radio">
+                            <label for="logoped">Логопед</label>
+                            <input type="radio" id="psiho" value="psiho" v-model="statuss" class="radio">
+                            <label for="psiho">Психолог</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="fiz_zal" value="fiz_zal" v-model="statuss" class="radio">
+                            <label for="fiz_zal">Инструктор по физической культуре (зал)</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="fiz_bas" value="fiz_bas" v-model="statuss" class="radio">
+                            <label for="fiz_bas">Инструктор по физической культуре (бассейн)</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="muz" value="muz" v-model="statuss" class="radio">
+                            <label for="muz">Музыкальный руководитель</label>
+                            <input type="radio" id="vos" value="vos" v-model="statuss" class="radio">
+                            <label for="vos">Воспитатель</label>
+                        </div>
+
+                    </div>
+                    <button class="btn-form" @click="reg">Регистрация</button>
+                    <button class="btn-close" @click="close" >Закрыть окно</button>
+                </form>
+                </div>
+
+            </dialog>
+        </div>
+
+    </div>
+
+<!--блок с выбором группы-->
+    <div class="spisok" :hidden="spisok_h">
+        <div class="selection">  <select v-model="selectOption" @change="save_kol">
+            <option selected disabled value="">Группы</option>
+            <option v-for="op in sortOption"
+                    :key="op.value"
+                    :value="op.value"
+
+            >{{op.name}}</option>
+        </select></div>
+    </div>
+        <!--    добалвение детей для заведующего-->
+        <div v-if="status_now==='zav' && selectOption!==''">
+            <div class="for_btn"><button class="btn1" @click="openDialogAdd">Добавить ребенка</button></div>
+            <dialog class="add" :open="openAdd" >
+                <div class="add_dia">
+                    <form onsubmit="return false">
+                        <label for="name">Введите фамилию:</label>
+                        <div>
+                            <input id="name" placeholder="Иванов" type="text" v-model="valuefamil" class="input">
+                        </div>
+                        <label for="famil">Введите имя:</label>
+                        <div>
+                            <input id="famil" placeholder="Иван" type="text" v-model="valuename" class="input">
+                        </div>
+                        <button @click="add_child" class="btn-form">Добавить</button>
+                        <button class="btn-close" @click="close" >Закрыть окно</button>
+                    </form>
+                </div>
+            </dialog>
+        </div>
+
+<!--поисковая строчка для детей-->
+    <div class="search" v-if="selectOption!=='' &&status_now!=='star_vos'">
+    <input type="text" v-model="searchValue" placeholder="Введите фамилию ребенка" class="input1"></div>
+
+
+
+<!--блок со списко детей выбранной группы для воспитателя-->
+    <div class="children" v-if="selectOption!==''">
+        <div class="cards" v-if="selectOption!==''">
+<!--вывод имени и фамилии ребенка-->
+            <div class="cardss" v-if="status_now!=='star_vos'&&selectOption!==''"><div class="post"  v-for="(person,index) in sortedAndSearchChild"  :key="person.id">
+                <div>
+                    <div class="opis">{{index +1}}) {{ person.familiyaa }} {{person.namee}}
+                    <div class="green" v-if="schetchik.includes(person.id)"></div>
+                        <div class="yellow" v-if="yvazh.includes(person.id)"></div>
+                        <div class="red" v-if="neyvazh.includes(person.id)"></div>
+                    </div>
+
+                </div>
+<!--поля для отмечания воспитателя и заведющего-->
+                <div v-if="(status_now==='vos')">
+<!--                    кнопка присутствия-->
+                    <button @click="plus(person)" v-if="otmetka.indexOf(person.id)===-1" class="btn2">Присутсвует</button>
+<!--                    кнопка отсутсвия по уваж-->
+                    <button @click="yvazh_f(person)" v-if="otmetka.indexOf(person.id)===-1" class="btn2">у/п</button>
+<!--                    кнопка отсутвия по неуваж-->
+                    <button @click="neyvazh_f(person)" v-if="otmetka.indexOf(person.id)===-1" class="btn2">н/п</button>
+                    <button  @click="otmena(person)" v-if="schetchik.indexOf(person.id)!==-1|| yvazh.indexOf(person.id)!==-1||neyvazh.indexOf(person.id)!==-1 &&(status_now==='zav' || status_now==='vos')" class="btn2">Отмена</button>
+
+                </div>
+                <button @click="remove_child(person)" v-if="status_now==='zav'" class="btn2">Удалить</button>
+<!--поля для отмечания логопеда/психолога/инструктора по физ культуре/муз.руководителя-->
+                <div v-if="status_now!=='vos'&&status_now!=='zav'&&status_now!=='star_vos'">
+                    <!--                    кнопка присутствия-->
+                    <button @click="plus(person)" v-if="otmetka.indexOf(person.id)===-1 &&flag===1" class="btn2">Присутсвует</button>
+                    <!--                    кнопка отсутсвия по уваж-->
+                    <button @click="yvazh_f(person)" v-if="otmetka.indexOf(person.id)===-1&&flag===1" class="btn2">у/п</button>
+                    <!--                    кнопка отсутвия по неуваж-->
+                    <button @click="neyvazh_f(person)" v-if="otmetka.indexOf(person.id)===-1&&flag===1" class="btn2">н/п</button>
+                    <button  @click="otmena(person)" v-if="schetchik.indexOf(person.id)!==-1|| yvazh.indexOf(person.id)!==-1||neyvazh.indexOf(person.id)!==-1 &&(status_now!=='vos'&&status_now!=='zav'&&status_now!=='star_vos')" class="btn2">Отмена</button>
+                </div>
+                <div class="line"></div>
+            </div>
+            </div>
+        </div>
+    </div>
+<!--кнопка сохранить для воспитателя и заведующей-->
+    <div v-if="Number(schetchik.length+yvazh.length+neyvazh.length)===Number(vsego_detey) && (status_now==='zav' || status_now==='vos')" class="for_btn">
+        <button @click="save" class="btn1">Сохранить</button>
+    </div>
+    <!--кнопка сохранить для всех других-->
+    <div v-if="((Number(schetchik.length+yvazh.length+neyvazh.length)>=1)&& (status_now!=='vos'&&status_now!=='zav'&&status_now!=='star_vos'))" class="for_btn">
+        <button @click="save" class="btn1">Сохранить</button>
+    </div>
+
+<!--потом убрать этот блок-->
+<!--    <div v-if="selectOption!==''"><div>присутсвует: {{schetchik.length}}</div>-->
+<!--        <div>уваж: {{yvazh.length}}</div>-->
+<!--        <div>неуваж: {{neyvazh.length}}</div>-->
+<!--    </div>-->
+
+<!--    блок для старшего воспитателя-->
+    <div v-if="status_now==='star_vos'&&selectOption!==''">
+        <div class="for_btn" ><button  @click="raschet_otchet" class="btn1">Показать отчет</button></div>
+        <div class="othet_star" v-if="flag_othcet===1">
+            <table>
+                <tr>
+                    <td>Ребенок</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.familiyaa}} {{person.namee}}</td>
+                </tr>
+                <tr>
+                    <td>Воспитатель</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.otmetka_vos}}</td>
+                </tr>
+                <tr>
+                    <td>Инструктор (бассейн)</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.otmetka_inst_s}}</td>
+
+                </tr>
+                <tr>
+                    <td>Инструктор (зал)</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.otmetka_inst_z}}</td>
+
+                </tr>
+                <tr>
+                    <td>Музыкальный руководитель</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.otmetka_muz}}</td>
+
+                </tr>
+                <tr>
+                    <td>Психолог</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.otmetka_psiho}}</td>
+
+                </tr>
+                <tr>
+                    <td>Логопед</td>
+                    <td v-for="person in sortedAndSearchChild"  :key="person.id"> {{person.otmetka_logo}}</td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+<div v-if="selectOption!==''">
+   <div class="for_btn">
+       <button @click="exit" :hidden="spisok_h" class="btn1">Выйти</button>
+   </div>
+</div>
+
+
+
+</div>
+</div>
+<script  src="https://unpkg.com/vue@next"></script>
+<script  src="cd16.js"></script>
+</body>
+</html>
