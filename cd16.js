@@ -389,6 +389,10 @@ const App ={
             this.status_now=''
             this.login=''
             this.password=''
+            this.otmetka=[]
+            this.schetchik=[]
+            this.yvazh=[]
+            this.neyvazh=[]
         },
         //автризация
         avto() {
